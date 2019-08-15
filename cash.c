@@ -2,13 +2,14 @@
 #include <stdio.h>
 #include <math.h>
 
-float userPaid;
+float changeOwed;
 int cents;
-int total = 0;
+int totalCoins = 0;
 //create an array containing these variables
 int denomArr[] = {25, 10, 5, 1};
+//get length of the denomArr
 int denomArrLength = sizeof(denomArr)/sizeof(denomArr[0]);
-float remainingChange;
+int evenChange;
 
 
 int main(void)
@@ -16,40 +17,39 @@ int main(void)
     //Check user provided positive change
     do {
         //Initial money paid
-        userPaid = get_float("How much do you pay?");
+        changeOwed = get_float("Enter amount of change?");
         //convert userPaid to cents
-        cents = round(userPaid * 100);
+        cents = round(changeOwed * 100);
         
-        printf("User paid: %f\n", userPaid);
+        printf("User change: %f\n", changeOwed);
         
     }
-    while (userPaid < 0);
-    
-    
+    while (changeOwed < 0);
     
     //loop through denominations
     for (int i = 0; i < denomArrLength; i++)
     {
         //if denomination goes into cents with no remainder
-        if (cents % denomArr[0] == 0) {
-            printf("No remainder\n");
-            // Check how many quarters go into userPaid with no remainder
-            // If no remainder update total with amnt of quarters
-            total = cents / denomArr[0];
+        if (cents % denomArr[i] == 0) {
+           
+            // update totalCoins with amnt
+            totalCoins += cents / denomArr[i];
+            break;
         }
         
-            //float change = cents / quarters; 
+        // save how much of denomination goes into cents evenly
+        evenChange = cents / denomArr[i];
+        // add saved even amount to total coins
+        totalCoins += evenChange;
+        
+        // subtract even division from cents
+        cents = cents - evenChange * denomArr[i];
+        
+        printf("remaining change: %i\n", cents);
             
-        
-        // subtract out remaining change
-        remainingChange = cents / denomArr[i];
-        printf("remaining change: %f\n", remainingChange);
-            //Update remaining change variable
-   
-         //repeat steps for each denomination
-        
-        
+        //repeat steps for each denomination
+         
     }
         
-    printf("total coins needed: %i\n", total);
+    printf("total coins needed: %i\n", totalCoins);
 }
