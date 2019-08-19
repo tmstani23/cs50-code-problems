@@ -1,0 +1,32 @@
+// Get single command-line argument (key)
+//   check if not single char input
+//     print usage key error
+//   if it is single char input
+//     print success
+//   if it is a digit
+//     convert string to integer
+//     print the input
+//   if not an int
+//     print the usage error
+    
+// prompt user for string
+// create array with all the letters of alphabet a-z
+// create a variable to hold the ciphertext
+
+// start a loop through each character of the plaintext
+//   start another loop through the alpha letters array
+//     check if the current plaintext char i matches the current alpha letter j
+//       if they match save the paintext char's index as a variable
+//         check if the char's index + key value is > 26
+//           if it is greater 
+//             subtract 27 from char index + key value (this is ciper text index)
+//            if it is not greater
+//              save char index + key value as cipher text index
+//              check alpha array for character at cipher-text index
+//                append character to cipherString var.
+//         continue looping until it is found
+//        repeat process for each character of plaintext
+      
+
+// print plaintext: plainString
+// print ciphertext: cipherString
