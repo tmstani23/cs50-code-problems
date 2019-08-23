@@ -79,12 +79,10 @@ int main(int argc, string argv[])
                 //       if they match save the paintext char's index as a variable
                 
                  sumOfMatchingIndices = j + inputKey;
-                 printf("sum of indices = %i\n", sumOfMatchingIndices);
+                 
                 //         check if the alpha char's index + key value is > 26
                 if (sumOfMatchingIndices > 26) {
                     //           if it is greater 
-                   
-                    printf("alphaChar index + key val greater than 26\n");
                     //subtract amount over 26 from sum of alpha char index and key value (this is final cipher char index)
                     cipherCharIndex = sumOfMatchingIndices - 26;
                     // add char to final cipher text string
@@ -92,24 +90,18 @@ int main(int argc, string argv[])
                         if(isupper(plaintextMessage[i])) {
                             //lookup cipher text char index in alpha arr
                             cipherTextChar = toupper(alphaArr[cipherCharIndex]);
-                            printf("final cipher text char: %c\n", cipherTextChar);
                             //append the cipher text char to cipher text string
-                        
                             cipherText[strlen(cipherText)] = cipherTextChar;
                             //strcat(cipherTextChar, cipherText);
                         }
                         else {
                             //lookup cipher text char index in alpha arr
                             cipherTextChar = alphaArr[cipherCharIndex];
-                            printf("final cipher text char: %c\n", cipherTextChar);
                             //append the cipher text char to cipher text string
-                        
                             cipherText[strlen(cipherText)] = cipherTextChar;
                             //strcat(cipherTextChar, cipherText);
                         }
-                        
-                        
-                        
+                            
                 }
                 //if it is not greater
                 else if (sumOfMatchingIndices <= 26)
@@ -133,24 +125,19 @@ int main(int argc, string argv[])
                     
                 }
 
-                
-                //printf("plaintext: %c matches alpha %c: \n", plaintextMessage[i], alphaArr[j]);
             }
             //         continue looping until it is found
-            
-           
-            //printf("%c\n", alphaArr[j]);
+         
         }
          //else add the character itself to the ciphertext
         if (isalpha(plaintextMessage[i]) == 0)
         {
             char plainTextNonAlphaChar = plaintextMessage[i];
-            printf("plaintext char: %c\n", plainTextNonAlphaChar);
             cipherText[strlen(cipherText)] = plainTextNonAlphaChar;
 
         }
         //repeat process for each character of plaintext
-        //printf("%c\n", plaintextMessage[i]);
+        
     }
 
 
