@@ -59,9 +59,9 @@ int main(int argc, string argv[])
     //Get user plaintext for cipher
     string plaintextMessage = get_string("Input message to be coded: ");
     //Create string size to match plaintext size
-    int plainMessageSize = strlen(plaintextMessage) + 10;
+    int plainMessageSize = strlen(plaintextMessage);
     //Allocate pointer to message size 
-    cipherText = (char *) malloc(plainMessageSize);
+    cipherText = (char *) malloc(plainMessageSize * 2);
 
     // start a loop through each character of the plaintext
     for (int i = 0; i < strlen(plaintextMessage); i++) 
@@ -79,12 +79,34 @@ int main(int argc, string argv[])
                 //       if they match save the paintext char's index as a variable
                 
                  sumOfMatchingIndices = j + inputKey;
-                 
-                //         check if the alpha char's index + key value is > 26
-                if (sumOfMatchingIndices > 26) {
-                    //           if it is greater 
-                    //subtract amount over 26 from sum of alpha char index and key value (this is final cipher char index)
-                    cipherCharIndex = sumOfMatchingIndices - 26;
+
+                 //check if index is 26
+                if (sumOfMatchingIndices == 26)
+                {
+                    //  save char index + key value as cipher text index
+                    cipherCharIndex = sumOfMatchingIndices;
+                    //check if character is uppercase
+                    if(isupper(plaintextMessage[i])) {
+                        //              check alpha array for character at index
+                            //save uppercase version as a variable
+                        cipherTextChar = toupper(alphaArr[0]);
+                        //append the cipher text char to cipher text string
+                        cipherText[strlen(cipherText)] = cipherTextChar;
+                    }
+                    else {
+                        //lookin alpha array for matching index and save
+                        cipherTextChar = alphaArr[0];
+                        //append the cipher text char to cipher text string
+                        cipherText[strlen(cipherText)] = cipherTextChar;
+                    }
+                    
+                }
+                //   Perform decoding based on calculation
+                else {
+                    //calculation for cipher text character index
+                    sumOfMatchingIndices = (j + inputKey) % 26;
+                    
+                    cipherCharIndex = sumOfMatchingIndices;
                     // add char to final cipher text string
                         //check if char is uppercase
                         if(isupper(plaintextMessage[i])) {
@@ -103,33 +125,12 @@ int main(int argc, string argv[])
                         }
                             
                 }
-                //if it is not greater
-                else if (sumOfMatchingIndices <= 26)
-                {
-                    //              save char index + key value as cipher text index
-                    cipherCharIndex = sumOfMatchingIndices;
-                    //check if character is uppercase
-                    if(isupper(plaintextMessage[i])) {
-                        //              check alpha array for character at index
-                            //save uppercase version as a variable
-                        cipherTextChar = toupper(alphaArr[cipherCharIndex]);
-                        //append the cipher text char to cipher text string
-                        cipherText[strlen(cipherText)] = cipherTextChar;
-                    }
-                    else {
-                        //lookin alpha array for matching index and save
-                        cipherTextChar = alphaArr[cipherCharIndex];
-                        //append the cipher text char to cipher text string
-                        cipherText[strlen(cipherText)] = cipherTextChar;
-                    }
-                    
-                }
-
+                
             }
             //         continue looping until it is found
          
         }
-         //else add the character itself to the ciphertext
+         //else add the non-alpha character itself to the ciphertext
         if (isalpha(plaintextMessage[i]) == 0)
         {
             char plainTextNonAlphaChar = plaintextMessage[i];
