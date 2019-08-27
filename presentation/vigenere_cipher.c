@@ -12,9 +12,9 @@ char alphaArr[] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','
 int alphaArrLength = sizeof(alphaArr)/sizeof(alphaArr[0]);
 //Initialize pointer to hold dynamic length string
 char *cipherText;
-//Initialize keyword
-char inputKeyword;
-int shiftedKey;
+
+
+
 
 // Function declarations
 int shiftKey(char c);
@@ -22,9 +22,10 @@ int shiftKey(char c);
 // Get single command-line argument (Keyword)
 int main(int argc, string argv[])
 {
-    // create variable to hold user cipher Keyword
-    
-   
+    //Initialize keyword
+    char* keyword;
+    //Initialize for amount to shift based on keyword
+    char shiftedKey;
 
     //   check if not single word input
     if (argc != 2)
@@ -48,12 +49,17 @@ int main(int argc, string argv[])
             }
             
         }
-        // convert string to integer
-            inputKeyword = *argv[1];
+        // set shiftedKey to first command linecharacter
+            shiftedKey = *argv[1];
+            //set keyword = to command line string
+            keyword = argv[1];
+            //initialize keyword string length
+            int keywordLength = strlen(keyword);
             
             //     print the input
-            printf("Keyword is: %c\n", inputKeyword);
-            shiftedKey = shiftKey(inputKeyword);
+            printf("Keyword is: %s\n", keyword);
+            printf("Keyword length is: %i\n", keywordLength);
+            shiftedKey = shiftKey(shiftedKey);
             printf("shifted key index: %i\n", shiftedKey);
             
     }
@@ -69,97 +75,113 @@ int main(int argc, string argv[])
 
 
     //Get user plaintext for cipher
-    // string plaintextMessage = get_string("Input message to be coded: ");
-    // //Create string size to match plaintext size
-    // int plainMessageSize = strlen(plaintextMessage);
-    // // //Allocate pointer to message size 
-    // cipherText = (char *) malloc(plainMessageSize * 2);
+    string plaintextMessage = get_string("Input message to be coded: ");
+    //Create string size to match plaintext size
+    int plainMessageSize = strlen(plaintextMessage);
+    // //Allocate pointer to message size 
+    cipherText = (char *) malloc(plainMessageSize * 2);
+    //create shiftedKeyIndex variable
+    int shiftedKeyIndex = 0;
 
-    // // start a loop through each character of the plaintext
-    // for (int i = 0; i < strlen(plaintextMessage); i++) 
-    // {
-    //     //Initialize variables:
-    //     int cipherCharIndex;
-    //     int sumOfMatchingIndices;
-    //     char cipherTextChar;
-    //     //   start another loop through the alpha letters array
-    //     for (int j = 0; j < alphaArrLength; j++)  
-    //     {
-                //     check if the current plaintext char i matches the current alpha letter j
-                //if(plaintextMessage[i] == alphaArr[j] || tolower(plaintextMessage[i]) == alphaArr[j]) 
-                //{
-    //             //       if they match save the paintext char's index as a variable
+    // start a loop through each character of the plaintext
+    for (int i = 0; i < strlen(plaintextMessage); i++) 
+    {
+        //Initialize variables:
+        int cipherCharIndex;
+        int sumOfMatchingIndices;
+        char cipherTextChar;
+
+        //calculate shiftedKey index based on plaintext index
+        //if current plaintext character is not an alphabetical character
+                //dont increment shift key index
+        //else if current plaintext index > shiftedKey length
+                //reset shiftedKey index to 0
+        //else increment shift key index based on plaintext i
+            
+            
+        //loop through each keywordcharacter based on shiftkey index
+                //set shiftedKey = call shift function passing in keywordcharacter at shiftkey index
+
+
+
+        //   start another loop through the alpha letters array
+        for (int j = 0; j < alphaArrLength; j++)  
+        {
+                //check if the current plaintext char i matches the current alpha letter j
+                if(plaintextMessage[i] == alphaArr[j] || tolower(plaintextMessage[i]) == alphaArr[j]) 
+                {
+                //       if they match save the paintext char's index as a variable
                 
-    //              sumOfMatchingIndices = j + inputKeyword;
+                 sumOfMatchingIndices = j + shiftedKey;
 
-    //              //check if index is 26
-    //             if (sumOfMatchingIndices == 26)
-    //             {
-    //                 //  save char index + Keyword value as cipher text index
-    //                 cipherCharIndex = sumOfMatchingIndices;
-    //                 //check if character is uppercase
-    //                 if(isupper(plaintextMessage[i])) {
-    //                     //check alpha array for character at index
-    //                         //save uppercase version as a variable
-    //                     cipherTextChar = toupper(alphaArr[0]);
-    //                     //append the cipher text char to cipher text string
-    //                     cipherText[strlen(cipherText)] = cipherTextChar;
-    //                 }
-    //                 else {
-    //                     //lookin alpha array for matching index and save
-    //                     cipherTextChar = alphaArr[0];
-    //                     //append the cipher text char to cipher text string
-    //                     cipherText[strlen(cipherText)] = cipherTextChar;
-    //                 }
+                 //check if index is 26
+                if (sumOfMatchingIndices == 26)
+                {
+                    //  save char index + Keyword value as cipher text index
+                    cipherCharIndex = sumOfMatchingIndices;
+                    //check if character is uppercase
+                    if(isupper(plaintextMessage[i])) {
+                        //check alpha array for character at index
+                            //save uppercase version as a variable
+                        cipherTextChar = toupper(alphaArr[0]);
+                        //append the cipher text char to cipher text string
+                        cipherText[strlen(cipherText)] = cipherTextChar;
+                    }
+                    else {
+                        //lookin alpha array for matching index and save
+                        cipherTextChar = alphaArr[0];
+                        //append the cipher text char to cipher text string
+                        cipherText[strlen(cipherText)] = cipherTextChar;
+                    }
                     
-    //             }
-    //             //   Perform decoding based on calculation
-    //             else {
-    //                 //calculation for cipher text character index
-    //                 sumOfMatchingIndices = (j + inputKeyword) % 26;
+                }
+                //   Perform decoding based on calculation
+                else {
+                    //calculation for cipher text character index
+                    sumOfMatchingIndices = (j + shiftedKey) % 26;
                     
-    //                 cipherCharIndex = sumOfMatchingIndices;
-    //                 // add char to final cipher text string
-    //                     //check if char is uppercase
-    //                     if(isupper(plaintextMessage[i])) {
-    //                         //lookup cipher text char index in alpha arr
-    //                         cipherTextChar = toupper(alphaArr[cipherCharIndex]);
-    //                         //append the cipher text char to cipher text string
-    //                         cipherText[strlen(cipherText)] = cipherTextChar;
-    //                         //strcat(cipherTextChar, cipherText);
-    //                     }
-    //                     else {
-    //                         //lookup cipher text char index in alpha arr
-    //                         cipherTextChar = alphaArr[cipherCharIndex];
-    //                         //append the cipher text char to cipher text string
-    //                         cipherText[strlen(cipherText)] = cipherTextChar;
-    //                         //strcat(cipherTextChar, cipherText);
-    //                     }
+                    cipherCharIndex = sumOfMatchingIndices;
+                    // add char to final cipher text string
+                        //check if char is uppercase
+                        if(isupper(plaintextMessage[i])) {
+                            //lookup cipher text char index in alpha arr
+                            cipherTextChar = toupper(alphaArr[cipherCharIndex]);
+                            //append the cipher text char to cipher text string
+                            cipherText[strlen(cipherText)] = cipherTextChar;
+                            //strcat(cipherTextChar, cipherText);
+                        }
+                        else {
+                            //lookup cipher text char index in alpha arr
+                            cipherTextChar = alphaArr[cipherCharIndex];
+                            //append the cipher text char to cipher text string
+                            cipherText[strlen(cipherText)] = cipherTextChar;
+                            //strcat(cipherTextChar, cipherText);
+                        }
                             
-    //             }
+                }
                 
-    //         }
-    //         //         continue looping until it is found
+            }
+            //         continue looping until it is found
          
-         //}
-        //      //else add the non-alpha character itself to the ciphertext
-    //     if (isalpha(plaintextMessage[i]) == 0)
-    //     {
-    //         char plainTextNonAlphaChar = plaintextMessage[i];
-    //         cipherText[strlen(cipherText)] = plainTextNonAlphaChar;
+         }
+             //else add the non-alpha character itself to the ciphertext
+        if (isalpha(plaintextMessage[i]) == 0)
+        {
+            char plainTextNonAlphaChar = plaintextMessage[i];
+            cipherText[strlen(cipherText)] = plainTextNonAlphaChar;
 
-    //     }
-    //     //repeat process for each character of plaintext
+        }
+        //repeat process for each character of plaintext
         
-    // }
+    }
 
 
     
     
     // // // print plaintext: plainString
     // // // print ciphertext: cipherString//Print message
-    // printf("plaintext: %s\n", plaintextMessage);
-    // printf("ciphertext: %s\n", cipherText);
+    printf("plaintext: %s\n", plaintextMessage);
+    printf("ciphertext: %s\n", cipherText);
     
     
     
@@ -171,6 +193,9 @@ int shiftKey(char c)
 {
     int key;
     //calculate cipher index of c
+    if(isupper(c)){
+        c = tolower(c);
+    }
     
     for (int j = 0; j < alphaArrLength; j++) {
         if (c == alphaArr[j]) {
