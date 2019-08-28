@@ -18,12 +18,14 @@ char *cipherText;
 
 // Function declarations
 int shiftKey(char c);
+int calcShiftKeyIndex(int plainTextIndex, int shiftedKeyIndex, char currentPlainChar, int keywordLength);
 
 // Get single command-line argument (Keyword)
 int main(int argc, string argv[])
 {
-    //Initialize keyword
+    //Initialize keyword to hold command line keyword
     char* keyword;
+    int keywordLength;
     //Initialize for amount to shift based on keyword
     char shiftedKey;
 
@@ -31,7 +33,7 @@ int main(int argc, string argv[])
     if (argc != 2)
     {
         //print usage Keyword error
-        printf("Usage: ./vigenere Keyword\n");
+        printf("Usage: ./vigenere keyword\n");
         return 1;
     }
     //   if it is single char input
@@ -44,7 +46,7 @@ int main(int argc, string argv[])
             //check if input string letters are not alpha chars
             if(isalpha(argv[1][i]) == 0) {
                 //if not print usage Keyword error
-                printf("Usage: ./vigenere Keyword\n");
+                printf("Usage: ./vigenere keyword\n");
                 return 1;
             }
             
@@ -54,19 +56,19 @@ int main(int argc, string argv[])
             //set keyword = to command line string
             keyword = argv[1];
             //initialize keyword string length
-            int keywordLength = strlen(keyword);
+            keywordLength = strlen(keyword);
             
             //     print the input
             printf("Keyword is: %s\n", keyword);
             printf("Keyword length is: %i\n", keywordLength);
-            shiftedKey = shiftKey(shiftedKey);
-            printf("shifted key index: %i\n", shiftedKey);
+            // shiftedKey = shiftKey(shiftedKey);
+            // printf("shifted key index: %i\n", shiftedKey);
             
     }
     
     
     else {
-        printf("Usage: ./vigenere Keyword\n");
+        printf("Usage: ./vigenere keyword\n");
         return 1;
     }
     
@@ -82,6 +84,7 @@ int main(int argc, string argv[])
     cipherText = (char *) malloc(plainMessageSize * 2);
     //create shiftedKeyIndex variable
     int shiftedKeyIndex = 0;
+    
 
     // start a loop through each character of the plaintext
     for (int i = 0; i < strlen(plaintextMessage); i++) 
@@ -90,18 +93,15 @@ int main(int argc, string argv[])
         int cipherCharIndex;
         int sumOfMatchingIndices;
         char cipherTextChar;
+        
 
-        //calculate shiftedKey index based on plaintext index
-        //if current plaintext character is not an alphabetical character
-                //dont increment shift key index
-        //else if current plaintext index > shiftedKey length
-                //reset shiftedKey index to 0
-        //else increment shift key index based on plaintext i
+        shiftedKeyIndex = calcShiftKeyIndex(i, shiftedKeyIndex, plaintextMessage[i], keywordLength);
+        printf("shifted key index: %i\n", shiftedKeyIndex);
             
             
         //loop through each keywordcharacter based on shiftkey index
                 //set shiftedKey = call shift function passing in keywordcharacter at shiftkey index
-
+        shiftedKey = shiftKey(keyword[shiftedKeyIndex]);
 
 
         //   start another loop through the alpha letters array
@@ -205,4 +205,23 @@ int shiftKey(char c)
     
 // TODO
     return key;
+}
+
+int calcShiftKeyIndex(int plainTextIndex, int shiftedKeyIndex, char currentPlainChar, int keywordLength) {
+        if(plainTextIndex == 0) {
+            shiftedKeyIndex = 0;
+        }
+        //if current plaintext character is an alphabetical character
+        else if(isalpha(currentPlainChar)) {
+            shiftedKeyIndex++;
+        }
+                
+        //if current plaintext index > keyword length
+        if(shiftedKeyIndex > keywordLength - 1) {
+            //reset shiftedKey index to 0
+            shiftedKeyIndex = 0;
+        }
+                
+        return shiftedKeyIndex;
+
 }
