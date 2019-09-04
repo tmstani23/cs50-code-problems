@@ -70,33 +70,38 @@ int main(int argc, char *argv[])
         {
             // temporary storage
             RGBTRIPLE triple;
-            //Re-assign rgbt values to hex values for purple
-            // triple.rgbtRed = 0x80;
-            // triple.rgbtGreen = 0x00;
-            // triple.rgbtBlue = 0x80;
-
             // read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
 
-            //check what current pixel hex value is set to to determine red hex value
-            if (triple.rgbtRed) {
-                //printf("%i\n", triple.rgbtRed);
+            //check if pixel is mostly red
+            if (triple.rgbtRed < 240 && triple.rgbtBlue > 50) 
+            {
+                // printf("red: %i\n", triple.rgbtRed);
+                // printf("blue: %i\n", triple.rgbtBlue);
+                // printf("green: %i\n", triple.rgbtGreen);
+                //reset pixel values to aquamarine
+                triple.rgbtRed = 0;
+                triple.rgbtGreen = 250;
+                triple.rgbtBlue = 250;
             } 
-            //Rgb color values in clue image:
-                //255,96,96 - bright red
-                //254,239,239 - almost white
-                //254,223,223 - very light pink
-                //255,24,24 - dark red
             
-                //if it's bright red change it to almost white
-                if(triple.rgbtGreen <= 0x96 && triple.rgbtBlue <= 0x96) {
-                    printf("triple changed\n");
-                    triple.rgbtRed = 0xFE;
-                    triple.rgbtGreen = 0xEF;
-                    triple.rgbtBlue = 0xEF;
+            //if it's bright red change it to black
+            if(triple.rgbtGreen <= 220 && triple.rgbtBlue <= 220)
+            {
+                //printf("triple changed\n");
+                triple.rgbtRed = 0;
+                triple.rgbtGreen = 0;
+                triple.rgbtBlue = 0;
 
-                }
-                //if it's alm
+            }
+            //if it's white change it to black
+            if(triple.rgbtBlue > 240 && triple.rgbtGreen > 240 && triple.rgbtRed > 240) 
+            {
+                triple.rgbtRed = 0;
+                triple.rgbtGreen = 0;
+                triple.rgbtBlue = 0;
+            }
+            
 
             // write RGB triple to outfile
             fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
