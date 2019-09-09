@@ -2,12 +2,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <ctype.h>
+#include <string.h>
 #include "bmp.h"
 
 int main(int argc, char *argv[])
 {
-    // ensure proper usage
+    // check for 3 command line arguments
     if (argc != 4)
     {
         fprintf(stderr, "./resize n infile outfile");
@@ -18,20 +19,31 @@ int main(int argc, char *argv[])
     {
         
         //check if input string includes any nondigits
-        if(isdigit(argv[1][i]) == 1) {
+        if(isdigit(argv[1][i]) == 0) 
+        {
             //throw error if so
-            printf("Usage: n must be a number");
+            printf("Usage: n must be a number\n");
             return 1;
         }
-        //throw error if first argument isn't a positive number between 1 and 100
+      
     }
-        
-    
 
-    // remember filenames
-    char *n = argv[1];
+
+    // remember filenames and command line args
+    int n = atoi(argv[1]);
+    
     char *infile = argv[2];
-    char *outfile = argv[3];
+    char *outfile = argv[3];  
+
+    //throw error if first argument isn't a positive number between 1 and 100
+    if(n < 1 || n > 100) 
+    {
+        printf("n in loop: %i\n", n);
+        printf("n must be a positive integer between 1 and 100: %i\n", n);
+        return 1;
+    } 
+
+   
 
     // open input file
     FILE *inptr = fopen(infile, "r");
@@ -76,6 +88,8 @@ int main(int argc, char *argv[])
 
     // determine padding for scanlines
     int padding = (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
+
+    //set multiplier for photo width and height
 
     // iterate over infile's scanlines
     for (int i = 0, biHeight = abs(bi.biHeight); i < biHeight; i++)
