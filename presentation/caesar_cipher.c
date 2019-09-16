@@ -149,7 +149,8 @@ int main(int argc, string argv[])
     printf("plaintext: %s\n", plaintextMessage);
     printf("ciphertext: %s\n", cipherText);
     
-    
+    //free memory
+    free(cipherText);
     
     return 0;
 }

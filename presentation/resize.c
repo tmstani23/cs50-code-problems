@@ -80,40 +80,74 @@ int main(int argc, char *argv[])
         return 4;
     }
 
+    int oldpadding = (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
+
+    //modify bmheader and infoheader size/width/height here:
+    bi.biHeight *= n;
+    bi.biWidth *= n;
+    //bi.biSize *= n;
+    //bf.bfSize *= n;
+
+    printf("size in bytes of bitmap file = %i\n", bf.bfSize);
+    printf("biWidth = %i\n", bi.biWidth);
+    printf("biHeight = %i\n", bi.biHeight);
+    printf("number of bytes of structure = %i\n", bi.biSize);
+    printf("number of bits per pixel = %i\n", bi.biBitCount);
+    printf("byte size of the image = %i\n", bi.biSizeImage);
+    
+    // determine padding for scanlines
+    int padding = (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
+
+    // determine image size and structure size
+    bi.biSizeImage = ((sizeof(RGBTRIPLE) * bi.biWidth) + padding) * abs(bi.biHeight);
+    bf.bfSize = bi.biSizeImage + sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+    
     // write outfile's BITMAPFILEHEADER
     fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);
 
     // write outfile's BITMAPINFOHEADER
     fwrite(&bi, sizeof(BITMAPINFOHEADER), 1, outptr);
 
-    // determine padding for scanlines
-    int padding = (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
-
-    //set multiplier for photo width and height
 
     // iterate over infile's scanlines
     for (int i = 0, biHeight = abs(bi.biHeight); i < biHeight; i++)
     {
+
+        // store scanline in an array pixel by pixel for vertical scaling.
+        RGBTRIPLE scanline[bi.biWidth];
+
         // iterate over pixels in scanline
         for (int j = 0; j < bi.biWidth; j++)
         {
+            //check if we've hit padding in original bmp.
+            if (j % oldpadding == 0 && j != 0) 
+            {
+                //skip the padding.
+                fseek(inptr, oldpadding, SEEK_CUR);
+            }
+
             // temporary storage
             RGBTRIPLE triple;
 
-            // read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
 
-            // write RGB triple to outfile
-            fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
+            scanline[j] = triple;
+            printf("%c\n", scanline[j]);
+
         }
 
-        // skip over padding, if any
-        fseek(inptr, padding, SEEK_CUR);
-
-        // then add it back (to demonstrate how)
-        for (int k = 0; k < padding; k++)
+        for (int y = 0; y < n; y++) // repeat each row n times
         {
-            fputc(0x00, outptr);
+            for (int x = 0; x < bi.biWidth; x++) // iterate over pixels
+            {
+                for (int r = 0; r < n; r++) // repeat each pixel n times
+                    fwrite(&scanline[x], sizeof(RGBTRIPLE), 1, outptr);
+            }
+            // write padding if any for current scanline.
+            for (int z = 0; z < padding; z++)
+            {
+                fputc(0x00, outptr);
+            }
         }
     }
 
@@ -122,6 +156,8 @@ int main(int argc, char *argv[])
 
     // close outfile
     fclose(outptr);
+
+    //free any mallocs (free(pointer))
 
     // success
     return 0;
