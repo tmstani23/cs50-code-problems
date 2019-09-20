@@ -81,7 +81,8 @@ int main(int argc, char *argv[])
     }
 
     int oldpadding = (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
-
+    
+    
     //modify bmheader and infoheader size/width/height here:
     bi.biHeight *= n;
     bi.biWidth *= n;
@@ -122,6 +123,7 @@ int main(int argc, char *argv[])
             //check if we've hit padding in original bmp.
             if (j % oldpadding == 0 && j != 0) 
             {
+                //printf("padding skipped\n");
                 //skip the padding.
                 fseek(inptr, oldpadding, SEEK_CUR);
             }
@@ -132,7 +134,7 @@ int main(int argc, char *argv[])
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
 
             scanline[j] = triple;
-            printf("%c\n", scanline[j]);
+           
 
         }
 
@@ -146,6 +148,7 @@ int main(int argc, char *argv[])
             // write padding if any for current scanline.
             for (int z = 0; z < padding; z++)
             {
+                //printf("padding added: %i\n", z);
                 fputc(0x00, outptr);
             }
         }
