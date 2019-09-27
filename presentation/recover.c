@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int main(int argc, char *argv[])
 {
@@ -17,7 +18,9 @@ int main(int argc, char *argv[])
     // open input file
     FILE *inptr = fopen(infile, "r");
     // char array to store filename
-    char filename[5]; 
+    char filename[10]; 
+    //pointer to image file
+    FILE *img;
     int fileNameCount = 0;
     //throw error if file fails to open
     
@@ -27,18 +30,15 @@ int main(int argc, char *argv[])
         return 2;
     }
 
+    //initialize flag to state when jpeg has been found or not
+    int foundJpeg = 0;
+
     //Initialize loop condition
     int notEndOfFile = 0;
     //loop until end of file
     do {
         //initialize buffer to hold blocks of bytes from memory card
         unsigned char buffer[550];
-        //initialize flag to state when jpeg has been found or not
-        int foundJpeg = 0;
-
-        //testing filename creation based on count
-        //sprintf(filename, "%03i.jpg", filenameCount);
-        //printf("filename: %s\n", filename); 
         
         //read 512 bytes into buffer
         fread(buffer, 512, 1, inptr);
@@ -51,28 +51,36 @@ int main(int argc, char *argv[])
         {
             
             printf("found start of jpeg\n");
+            
             //already found a jpeg?
+            //printf("foundJpeg = %i\n", foundJpeg);
             if(foundJpeg == 1) {
                 //yes - 
                 //close previous file
                 //update filename count
+                fileNameCount++;
                 //create new file
-                //update filename to 002.jpg
-                //sprintf(filename, "%03i.jpg", filenameCount);
-                //printf("filename: %s\n", filename); 
+                sprintf(filename, "%03i.jpg", fileNameCount);
+                printf("filename: %s\n", filename); 
                 //open new file
-                
+                img = fopen(filename, "w");
                 // write 512 bytes to file
+                fwrite(buffer, 512, 1 , img);
+                //added to cancel infinite loop, remove once not needed
+                //notEndOfFile = 1;
             }
             //no
-            else if (foundJpeg == 0) {
+            else {
+                //close previous file
+                fclose(img);
                 //update filename count
-                //fileNameCount++;
-                //create new file
-                    //update filename to 002.jpg
-                //sprintf(filename, "%03i.jpg", filenameCount);
+                fileNameCount++;
+                //create new filename
+                sprintf(filename, "%03i.jpg", fileNameCount);
+                //open new file
+                img = fopen(filename, "w");
                 // write 512 bytes to file
-
+                fwrite(buffer, 512, 1 , img);
                 //set found jpeg  to true
                 foundJpeg = 1;
             }
@@ -80,23 +88,36 @@ int main(int argc, char *argv[])
             
                 
         }
-
+        //if not start of jpeg
         else {
-            //printf("not start of jpeg");
-            //if not start of jpeg
+            printf("not start of jpeg");
+            //calculate size of last item in buffer
+            int bufferLength = buffer[sizeof(buffer)/sizeof(buffer[0]) - 1];
+            
+            printf("buffer length: %d\n", bufferLength);
+            size_t lastBufferElemBytes = sizeof(buffer[bufferLength]);
+            printf("last elem size in bytes: %zu\n", lastBufferElemBytes);
             //already found a jpeg?
             if(foundJpeg == 1) {
                 //yes 
                     //is next block less than 512 bytes?
-                        //yes - end of file
-                            //close files
-                            //update while loop condition to end loop
-                            notEndOfFile = 1;
-                        //no - //- write next 512 bytes to file
+                    //yes - end of file
+                    if (lastBufferElemBytes < 512) 
+                    {
+                        //close files
+                        fclose(img);
+                        
+                        //update while loop condition to end loop
+                        notEndOfFile = 1;
+                    }
+                        
+                    //no - //- write next 512 bytes to file
             }
-                
+            //havent yet found a jpeg and not start of a jpeg
+            //discard 512 bytes and return to start of loop
+               
                     
-                //no - discard 512 bytes and return to start of loop
+                
         }
             
         
@@ -107,7 +128,7 @@ int main(int argc, char *argv[])
     
     
    
-    
+    printf("finished\n");
     //free any mallocs (free(pointer))
     
     return 0;
