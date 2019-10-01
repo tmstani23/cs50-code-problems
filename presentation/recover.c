@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
      // check for 2 command line arguments
     if (argc != 2)
     {
-        fprintf(stderr, "./resize n infile outfile");
+        fprintf(stderr, "Usage: ./recover image");
         return 1;
     }
     //Pointer to input file
@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     char filename[10]; 
     //pointer to image file
     FILE *img;
-    int fileNameCount = 0;
+    int fileNameCount = -1;
     //throw error if file fails to open
     
     if (inptr == NULL)
@@ -62,6 +62,7 @@ int main(int argc, char *argv[])
                 //update filename count
                 fileNameCount++;
                 //create new file
+                //set to 000.jpeg if first file
                 sprintf(filename, "%03i.jpg", fileNameCount);
                 printf("file created: %s\n", filename); 
                 //open new file
