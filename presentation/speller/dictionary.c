@@ -49,7 +49,18 @@ bool load(const char *dictionary)
     // Insert words into hash table
     while (fscanf(file, "%s", word) != EOF)
     {
-        // TODO
+        //check dictionary word
+        printf("words in dict: %s\n", word);
+        //hash word into number
+        unsigned int hashedWord = hash(word);
+        printf("hashed words: %u\n", hashedWord);
+        //add word into hashtable at index of hashed word
+        //allocate memory for new node
+        //create new node
+        //assign node->word to word
+        //copy node into hashtable at hashedWord location
+        printf("node at location of hashed word: %s", hashtable[hashedWord]);
+
     }
 
     // Close dictionary
