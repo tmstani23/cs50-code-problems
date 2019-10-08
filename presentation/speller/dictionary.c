@@ -1,8 +1,9 @@
 // Implements a dictionary's functionality
-
+#include <stdlib.h>
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "dictionary.h"
 
@@ -50,16 +51,45 @@ bool load(const char *dictionary)
     while (fscanf(file, "%s", word) != EOF)
     {
         //check dictionary word
-        printf("words in dict: %s\n", word);
+        printf("word in in dict: %s\n", word);
         //hash word into number
         unsigned int hashedWord = hash(word);
-        printf("hashed words: %u\n", hashedWord);
-        //add word into hashtable at index of hashed word
-        //allocate memory for new node
-        //create new node
-        //assign node->word to word
+        printf("hashed word index: %u\n", hashedWord);
+        
         //copy node into hashtable at hashedWord location
-        printf("node at location of hashed word: %s", hashtable[hashedWord]);
+        //if there aren't any nodes in linked list yet
+        if(hashtable[hashedWord] == NULL) 
+        {
+            //allocate memory for new node
+            node *newNode = malloc(sizeof(node));
+            //assign node->word to word
+            strcpy(newNode->word, word);
+            //assign node->next null
+            newNode->next = NULL;
+            //copy new node into hash table at hashedWord location
+            hashtable[hashedWord] = newNode;
+            printf("New first node created. Word val: %s\n", hashtable[hashedWord]->word);
+        }
+            
+        //else if other nodes exist
+        else 
+        {
+            printf("nodes already exist");
+            
+             //allocate memory for new node
+            node *newNode = malloc(sizeof(node)); 
+            //assign node->word to word
+            strcpy(newNode->word, word);
+            //assign node->next of first node to point to new node
+            strcpy(hashtable[hashedWord]->next, newNode->next);
+            //assign new node->next to = first node in link list's next value
+            strcpy(newNode->word, hashtable[hashedWord]->next);
+            //print new node in hashtable word and print word it points to
+            printf("first word: %s, second word: %s\n", hashtable[hashedWord]->word,  hashtable[hashedWord]->next->word);
+        }
+           
+            
+        
 
     }
 
