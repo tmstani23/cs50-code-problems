@@ -70,8 +70,19 @@ bool load(const char *dictionary)
             hashtable[hashedWord] = newNode;
             printf("New first node created. Word val: %s\n", hashtable[hashedWord]->word);
         }
+        else if (hashtable[hashedWord]->next == NULL) 
+        {
+            //allocate memory for new node
+            node *newNode = malloc(sizeof(node));
+            //assign word into new node
+            strcpy(newNode->word, word);
+            //assign first node's next pointer to point to new node
+            hashtable[hashedWord]->next = newNode;
+            //assign new nodes pointer to NULL
+            newNode->next = NULL;
             
-        //else if other nodes exist
+        }    
+        //else 2 other nodes exist
         else 
         {
             printf("nodes already exist");
@@ -80,12 +91,14 @@ bool load(const char *dictionary)
             node *newNode = malloc(sizeof(node)); 
             //assign node->word to word
             strcpy(newNode->word, word);
-            //assign node->next of first node to point to new node
-            strcpy(hashtable[hashedWord]->next, newNode->next);
-            //assign new node->next to = first node in link list's next value
-            strcpy(newNode->word, hashtable[hashedWord]->next);
+            
+            //assign new node's next pointer point to where head node is currently pointing
+            newNode->next = hashtable[hashedWord]->next;
+            //assign first node's next pointer to point to new node
+            hashtable[hashedWord]->next = newNode;
+            
             //print new node in hashtable word and print word it points to
-            printf("first word: %s, second word: %s\n", hashtable[hashedWord]->word,  hashtable[hashedWord]->next->word);
+            printf("new word node added: %s\n", word);
         }
            
             
@@ -110,7 +123,25 @@ unsigned int size(void)
 // Returns true if word is in dictionary else false
 bool check(const char *word)
 {
-    // TODO
+    node *cursor = hashtable[hash(word)];
+    
+    //printf("checking word in dictionary: %s\n", cursor->word);
+    printf("against word input into function: %s\n", word);
+    
+    // char inputWord = word;
+    
+    // //loop through linked list at hashed index
+    while (cursor != NULL)
+    {  
+        
+       //comparison not matching because wrong datatype comparison here
+        if (cursor->word == word) {
+            printf("match found for dict word: %s\n", cursor->word);
+            //return true;
+        }
+        cursor = cursor->next;
+    }
+    
     return false;
 }
 
