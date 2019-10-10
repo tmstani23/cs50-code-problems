@@ -124,20 +124,24 @@ unsigned int size(void)
 bool check(const char *word)
 {
     node *cursor = hashtable[hash(word)];
-    
-    //printf("checking word in dictionary: %s\n", cursor->word);
-    printf("against word input into function: %s\n", word);
-    
-    // char inputWord = word;
+
+    const char *dictWord = cursor->word;
+    const char *inputWord = word;
     
     // //loop through linked list at hashed index
     while (cursor != NULL)
     {  
         
+        //printf("checking word in dictionary: %s\n", cursor->word);
+        //printf("against word input into function: %s\n", word);
+        
+        
        //comparison not matching because wrong datatype comparison here
-        if (cursor->word == word) {
-            printf("match found for dict word: %s\n", cursor->word);
-            //return true;
+        if (dictWord == inputWord) 
+        {
+            printf("match found");
+            printf("match found for dict word: %s\n", inputWord);
+            return true;
         }
         cursor = cursor->next;
     }
