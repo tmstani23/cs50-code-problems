@@ -50,6 +50,7 @@ bool load(const char *dictionary)
     // Insert words into hash table
     while (fscanf(file, "%s", word) != EOF)
     {
+        
         //check dictionary word
         printf("word in in dict: %s\n", word);
         //hash word into number
@@ -120,27 +121,54 @@ unsigned int size(void)
     return 0;
 }
 
+char* lowercaseString(char* inputWord) {
+    char *outputString = malloc(sizeof(LENGTH+1));
+    int i = 0;
+    while( inputWord[i] ) {
+      putchar(tolower(inputWord[i]));
+      i++;
+   }
+   strcpy(outputString, inputWord);
+   return outputString;
+}
+
 // Returns true if word is in dictionary else false
 bool check(const char *word)
 {
     node *cursor = hashtable[hash(word)];
+    char wordSize[LENGTH + 1];
+    char *dictWord = malloc(sizeof(wordSize));
+    char *textWord = malloc(sizeof(word));
+    
+    
+    
+    //char dictWord[LENGTH+1];
+    //char *textWord = word;
+    //char *textWord;
+    //textWord = word;
 
-    const char *dictWord = cursor->word;
-    const char *inputWord = word;
+    //dictWord = lowercaseString(cursor->word);
+    //textWord = lowercaseString(textWord);
     
     // //loop through linked list at hashed index
     while (cursor != NULL)
     {  
-        
+        //strcpy(dictWord, cursor->word);
+        strcpy(textWord, word);
+        strcpy(dictWord, cursor->word);
+        //strcpy(dictWord, lowercaseString(cursor->word));
+        //strcpy(textWord, lowercaseString(textWord));
+        dictWord = lowercaseString(dictWord);
+        textWord = lowercaseString(textWord);
+        //printf("dictWord: %s\n", dictWord);
         //printf("checking word in dictionary: %s\n", cursor->word);
         //printf("against word input into function: %s\n", word);
         
         
        //comparison not matching because wrong datatype comparison here
-        if (dictWord == inputWord) 
+        if (strcmp(dictWord, textWord) == 0) 
         {
-            printf("match found");
-            printf("match found for dict word: %s\n", inputWord);
+            printf("\nmatch found for dict word: %s\n", dictWord);
             return true;
         }
         cursor = cursor->next;

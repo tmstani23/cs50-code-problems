@@ -14,5 +14,6 @@ bool load(const char *dictionary);
 unsigned int size(void);
 bool check(const char *word);
 bool unload(void);
+char lowercaseString(char inputWord);
 
 #endif // DICTIONARY_H
