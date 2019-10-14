@@ -20,6 +20,8 @@ node;
 
 // Represents a hash table
 node *hashtable[N];
+// Count for number of words loaded in dictionary
+int wordsInDict = 0;
 
 // Hashes word to a number between 0 and 25, inclusive, based on its first letter
 unsigned int hash(const char *word)
@@ -69,6 +71,8 @@ bool load(const char *dictionary)
             newNode->next = NULL;
             //copy new node into hash table at hashedWord location
             hashtable[hashedWord] = newNode;
+            //update word count
+            wordsInDict++;
             printf("New first node created. Word val: %s\n", hashtable[hashedWord]->word);
         }
         else if (hashtable[hashedWord]->next == NULL) 
@@ -81,6 +85,8 @@ bool load(const char *dictionary)
             hashtable[hashedWord]->next = newNode;
             //assign new nodes pointer to NULL
             newNode->next = NULL;
+            //update word count
+            wordsInDict++;
             
         }    
         //else 2 other nodes exist
@@ -97,7 +103,8 @@ bool load(const char *dictionary)
             newNode->next = hashtable[hashedWord]->next;
             //assign first node's next pointer to point to new node
             hashtable[hashedWord]->next = newNode;
-            
+            //update word count
+            wordsInDict++;
             //print new node in hashtable word and print word it points to
             printf("new word node added: %s\n", word);
         }
@@ -117,19 +124,20 @@ bool load(const char *dictionary)
 // Returns number of words in dictionary if loaded else 0 if not yet loaded
 unsigned int size(void)
 {
-    // TODO
-    return 0;
+    return wordsInDict;
 }
 
-char* lowercaseString(char* inputWord) {
-    char *outputString = malloc(sizeof(LENGTH+1));
+char *lowercaseString(char* inputWord) {
+   
     int i = 0;
-    while( inputWord[i] ) {
-      putchar(tolower(inputWord[i]));
+
+    while(inputWord[i]) {
+      inputWord[i] = tolower(inputWord[i]);
       i++;
    }
-   strcpy(outputString, inputWord);
-   return outputString;
+   
+   //printf("inputword: %s\n", inputWord);
+   return inputWord;
 }
 
 // Returns true if word is in dictionary else false
@@ -138,48 +146,66 @@ bool check(const char *word)
     node *cursor = hashtable[hash(word)];
     char wordSize[LENGTH + 1];
     char *dictWord = malloc(sizeof(wordSize));
-    char *textWord = malloc(sizeof(word));
-    
-    
-    
-    //char dictWord[LENGTH+1];
-    //char *textWord = word;
-    //char *textWord;
-    //textWord = word;
-
-    //dictWord = lowercaseString(cursor->word);
-    //textWord = lowercaseString(textWord);
+    char *textWord = malloc(sizeof(wordSize));
     
     // //loop through linked list at hashed index
     while (cursor != NULL)
     {  
-        //strcpy(dictWord, cursor->word);
-        strcpy(textWord, word);
         strcpy(dictWord, cursor->word);
-        //strcpy(dictWord, lowercaseString(cursor->word));
-        //strcpy(textWord, lowercaseString(textWord));
+        strcpy(textWord, word);
+    
         dictWord = lowercaseString(dictWord);
         textWord = lowercaseString(textWord);
-        //printf("dictWord: %s\n", dictWord);
-        //printf("checking word in dictionary: %s\n", cursor->word);
-        //printf("against word input into function: %s\n", word);
         
         
-       //comparison not matching because wrong datatype comparison here
+       //check if word in dictionary is the same as the text word
         if (strcmp(dictWord, textWord) == 0) 
         {
-            printf("\nmatch found for dict word: %s\n", dictWord);
+            //printf("\nmatch found for dict word: %s\n", dictWord);
             return true;
         }
         cursor = cursor->next;
     }
-    
+    //free mallocs
+    free(dictWord);
+    free(textWord);
+
     return false;
 }
 
 // Unloads dictionary from memory, returning true if successful else false
 bool unload(void)
 {
-    // TODO
-    return false;
+    //loop through entire hashtable array
+    for (int i = 0; i < N; i++)
+    {
+        //if head value isn't NULL
+        if (hashtable[i] != NULL) 
+        {
+            node *cursor = hashtable[i];
+            //loop through link list
+            while(cursor != NULL)
+            {
+                //set temp cursor pointer
+                node *tmpCursor = cursor;
+                //advance cursor
+                cursor = cursor->next;
+                //free temp cursor
+                //check tmp cursor state before free
+                free(tmpCursor);
+                //zet pntr to null for free verification
+                tmpCursor = NULL;
+                //return false to the function if the cursor wasn't freed
+                if(tmpCursor != NULL) 
+                {
+                    return false;
+                }
+                
+            }
+            
+        }
+        //else continue the loop
+    }   
+    //return true once loop finishes
+    return true;
 }
