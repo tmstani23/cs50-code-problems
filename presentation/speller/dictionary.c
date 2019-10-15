@@ -54,10 +54,10 @@ bool load(const char *dictionary)
     {
         
         //check dictionary word
-        printf("word in in dict: %s\n", word);
+        //printf("word in in dict: %s\n", word);
         //hash word into number
         unsigned int hashedWord = hash(word);
-        printf("hashed word index: %u\n", hashedWord);
+        //printf("hashed word index: %u\n", hashedWord);
         
         //copy node into hashtable at hashedWord location
         //if there aren't any nodes in linked list yet
@@ -73,7 +73,7 @@ bool load(const char *dictionary)
             hashtable[hashedWord] = newNode;
             //update word count
             wordsInDict++;
-            printf("New first node created. Word val: %s\n", hashtable[hashedWord]->word);
+            //printf("New first node created. Word val: %s\n", hashtable[hashedWord]->word);
         }
         else if (hashtable[hashedWord]->next == NULL) 
         {
@@ -92,7 +92,7 @@ bool load(const char *dictionary)
         //else 2 other nodes exist
         else 
         {
-            printf("nodes already exist");
+            //printf("nodes already exist");
             
              //allocate memory for new node
             node *newNode = malloc(sizeof(node)); 
@@ -106,7 +106,7 @@ bool load(const char *dictionary)
             //update word count
             wordsInDict++;
             //print new node in hashtable word and print word it points to
-            printf("new word node added: %s\n", word);
+            //printf("new word node added: %s\n", word);
         }
            
             
@@ -126,7 +126,7 @@ unsigned int size(void)
 {
     return wordsInDict;
 }
-
+// Returns lowercase version of input word
 char *lowercaseString(char* inputWord) {
    
     int i = 0;
@@ -135,7 +135,6 @@ char *lowercaseString(char* inputWord) {
       inputWord[i] = tolower(inputWord[i]);
       i++;
    }
-   
    //printf("inputword: %s\n", inputWord);
    return inputWord;
 }
@@ -161,6 +160,9 @@ bool check(const char *word)
        //check if word in dictionary is the same as the text word
         if (strcmp(dictWord, textWord) == 0) 
         {
+            //free mallocs
+            free(dictWord);
+            free(textWord);
             //printf("\nmatch found for dict word: %s\n", dictWord);
             return true;
         }
